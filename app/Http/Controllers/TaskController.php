@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
 use App\Models\Task;
-use Illuminate\Http\Request;
+use App\Models\SubTask;
+use App\Models\TaskCategorie;
 
 use App\Utils\ResponseFormatter;
 use App\Base\BaseController as CustomBaseController;
-use App\Models\SubTask;
-use App\Models\TaskCategorie;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends CustomBaseController 
 {
@@ -20,12 +21,29 @@ class TaskController extends CustomBaseController
         return isset($task_categorie);
     }
 
+    public function get_task_subtasks($task_id){
+        $subtasks = SubTask::where(["user_id"=> $this->user->id, "task_id"=> $task_id])->get();
+        return $subtasks;
+    }
+
     public function index()
     {
-        $tasks = Task::where("user_id", $this->user->id)->orderByRaw("task_categorie_id ASC")->get();
-        foreach($tasks as $task){
+        $tasks = TaskCategorie::with("task")
+            ->where("user_id",$this->user->id)
+            ->orderByRaw("id ASC")
+            ->get();
+        $null_tasks = Task::where(["user_id" => $this->user->id, "task_categorie_id" => null])->get();
+
+        foreach($tasks as $task_categorie){
+            foreach($task_categorie->task as $task){
+                $task["subtask_count"] = SubTask::where("task_id", $task->id)->count();
+            }
+        }
+        foreach($null_tasks as $task){
             $task["subtask_count"] = SubTask::where("task_id", $task->id)->count();
         }
+        
+        $tasks->push(["task" => $null_tasks]);
         return $tasks;
     }
 

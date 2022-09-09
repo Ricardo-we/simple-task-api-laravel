@@ -15,4 +15,8 @@ class TaskCategorie extends Model
     ];
     
     protected $table = 'task_categorie';
+
+    public function task(){
+        return $this->hasMany(Task::class);        
+    }
 }

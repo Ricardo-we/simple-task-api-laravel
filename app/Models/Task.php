@@ -15,6 +15,10 @@ class Task extends Model
         "task_categorie_id",
         "user_id"
     ];
+    
+    public function task_categorie(){
+        return $this->belongsTo(TaskCategorie::class);
+    }
 
     public function sub_task(){
         return $this->hasMany(SubTask::class);
