@@ -21,11 +21,6 @@ class TaskController extends CustomBaseController
         return isset($task_categorie);
     }
 
-    public function get_task_subtasks($task_id){
-        $subtasks = SubTask::where(["user_id"=> $this->user->id, "task_id"=> $task_id])->get();
-        return $subtasks;
-    }
-
     public function index()
     {
         $tasks = TaskCategorie::with("task")
@@ -60,7 +55,8 @@ class TaskController extends CustomBaseController
 
     public function show($id)
     {
-        
+        $subtasks = SubTask::where(["user_id"=> $this->user->id, "task_id"=> $id])->get();
+        return $subtasks;
     }
 
     public function update(Request $request, $id)

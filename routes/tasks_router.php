@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->get('/users', function (Request $request) {
 Route::post("users/register", [UsersController::class, "store"]);
 Route::post("users/login", [UsersController::class, "login"]);
 
-Route::middleware("auth:sanctum")->get("tasks/{task_id}", [TaskController::class, "get_task_subtasks"]);
+// Route::middleware("auth:sanctum")->get("tasks/{task_id}", [TaskController::class, "get_task_subtasks"]);
 Route::middleware("auth:sanctum")->apiResource("tasks", TaskController::class);
 Route::middleware("auth:sanctum")->apiResource("subtasks", SubTaskController::class);
 Route::middleware("auth:sanctum")->apiResource("task-categories", TaskCategorieController::class);
